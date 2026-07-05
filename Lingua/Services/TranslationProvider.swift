@@ -10,7 +10,7 @@ struct TranslationResult {
     let translatedText: String
 }
 
-enum TranslationError: LocalizedError {
+enum TranslationError: LocalizedError, Equatable {
     case emptyText
     case invalidResponse
     case serverError(String)
@@ -108,13 +108,11 @@ enum TranslationProviderFactory {
     private static let defaultEndpoint = "https://libretranslate.com/translate"
 
     static func make(bundle: Bundle = .main, session: URLSession = .shared) -> TranslationProvider {
-        let endpointString = (bundle.object(forInfoDictionaryKey: "TranslationAPIEndpoint") as? String)
-            ?.trimmingCharacters(in: .whitespacesAndNewlines)
-        let apiKey = (bundle.object(forInfoDictionaryKey: "TranslationAPIKey") as? String)
-            ?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let endpointString = (bundle.object(forInfoDictionaryKey: "TranslationAPIEndpoint") as? String)?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let apiKey = (bundle.object(forInfoDictionaryKey: "TranslationAPIKey") as? String)?.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        let endpoint = URL(string: endpointString?.isEmpty == false ? endpointString! : defaultEndpoint)
-            ?? URL(string: defaultEndpoint)!
+        let resolvedEndpointString = endpointString?.isEmpty == false ? endpointString! : defaultEndpoint
+        let endpoint = URL(string: resolvedEndpointString) ?? URL(string: defaultEndpoint)!
 
         return NetworkTranslationProvider(
             endpoint: endpoint,

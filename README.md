@@ -20,6 +20,16 @@ This project is configured for XcodeGen because this machine does not currently 
 4. Update the bundle identifier and CloudKit container in `project.yml` and `Lingua/Support/Lingua.entitlements`.
 5. Build and run on an iPhone or iPad simulator.
 
+## Working without local Xcode
+
+If your Mac cannot run a modern Xcode version, use the included GitHub Actions workflow to build and test in the cloud:
+
+1. Push your branch to GitHub.
+2. Open the Actions tab and run the `iOS CI` workflow (or open a pull request).
+3. The workflow will install XcodeGen, generate `Lingua.xcodeproj`, and run unit tests on a hosted macOS runner.
+
+Workflow file: `.github/workflows/ios-ci.yml`
+
 ## Translation backend
 
 Lingua now uses a real network-backed translation provider via `TranslationProvider`.
