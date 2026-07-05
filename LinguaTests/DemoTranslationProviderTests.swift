@@ -116,16 +116,16 @@ private final class URLProtocolStub: URLProtocol {
     }
 
     override func startLoading() {
-        if let stubError {
+        if let stubError = URLProtocolStub.stubError {
             client?.urlProtocol(self, didFailWithError: stubError)
             return
         }
 
-        if let stubResponse {
+        if let stubResponse = URLProtocolStub.stubResponse {
             client?.urlProtocol(self, didReceive: stubResponse, cacheStoragePolicy: .notAllowed)
         }
 
-        if let stubData {
+        if let stubData = URLProtocolStub.stubData {
             client?.urlProtocol(self, didLoad: stubData)
         }
 

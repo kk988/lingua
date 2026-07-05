@@ -10,7 +10,7 @@ struct TranslationResult {
     let translatedText: String
 }
 
-enum TranslationError: LocalizedError {
+enum TranslationError: LocalizedError, Equatable {
     case emptyText
     case invalidResponse
     case serverError(String)
