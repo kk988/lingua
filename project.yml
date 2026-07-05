@@ -1,6 +1,7 @@
 name: Lingua
 options:
   bundleIdPrefix: com.example
+  xcodeVersion: "15.4"
 settings:
   base:
     PRODUCT_NAME: Lingua
