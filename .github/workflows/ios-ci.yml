@@ -43,11 +43,17 @@ jobs:
 
       - name: Resolve simulator destination
         run: |
-          UDID=$(xcrun simctl list devices available | awk -F '[()]' '/iPhone 16 \(/ { print $(NF-1); exit }')
-
-          if [ -z "$UDID" ]; then
-            UDID=$(xcrun simctl list devices available | awk -F '[()]' '/iPhone [0-9]+/ { print $(NF-1); exit }')
-          fi
+          UDID=$(xcrun simctl list devices available -j | ruby -rjson -e '
+            data = JSON.parse(STDIN.read)
+            preferred = data["devices"].values.flatten.find { |d|
+              d["isAvailable"] && d["name"] == "iPhone 16"
+            }
+            fallback = data["devices"].values.flatten.find { |d|
+              d["isAvailable"] && d["name"] =~ /^iPhone/
+            }
+            device = preferred || fallback
+            puts(device ? device["udid"] : "")
+          ')
 
           if [ -z "$UDID" ]; then
             echo "No available iPhone simulator found"
@@ -63,5 +69,5 @@ jobs:
           xcodebuild test \
             -project Lingua.xcodeproj \
             -scheme Lingua \
-            -destination "id=${SIMULATOR_UDID}" \
+            -destination "platform=iOS Simulator,id=${SIMULATOR_UDID}" \
             CODE_SIGNING_ALLOWED=NO
